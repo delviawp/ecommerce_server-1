@@ -7,11 +7,14 @@ module.exports = function (err, req, res, next) {
                 errors.push(el.message)
             })
             statusCode = 400
+            //console.log(errors, 'ini error handler')
             break;
         default:
             errors.push(err.msg || 'internal server error')
+            //console.log(errors)
             statusCode = err.status || 500
             break;
     }
-    res.status(statusCode).json({errors})
+    //console.log(errors, 'ini eror handler')
+    res.status(statusCode).json({ errors })
 }

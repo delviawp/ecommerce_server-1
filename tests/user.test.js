@@ -1,10 +1,34 @@
 const request = require('supertest')
 const app = require('../app')
+const { User } = require('../models')
 
 let user = {
     email: 'admin@mail.com',
-    password: '1234'
+    password: '1234',
+    role: 'admin'
 }
+
+
+beforeAll(async done => {
+    try {
+        await User.create(user)
+        done()
+    } catch (error) {
+        done(error)
+    }
+})
+
+afterAll(function(done) {
+    if(process.env.NODE_ENV == 'test') {
+        User.destroy({ truncate: true})
+        .then(_=> {
+            done()
+        })
+        .catch(err => {
+           done(err) 
+        })
+    }
+})
 
 describe('test login / test case success', () => {
     test('Object in return with keys: message, code-status, id, and email',(done) => {
