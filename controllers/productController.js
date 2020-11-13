@@ -1,12 +1,22 @@
 const { Product } = require('../models')
 
 class ProductController {
+    static async getAll(req, res, next) {
+        try {
+            let products = await Product.findAll()
+            res.status(200).json(products)
+        } catch (error) {
+            next(error)
+        }
+    }
+
     static async create(req, res, next) {
         //console.log(req.body, '<< ni req body create')
         try {
             const { name, image_url, price, stock } = req.body
+            //console.log(req.body)
             const product = await Product.create({ name, image_url, price, stock})
-            console.log(product, 'ini product')
+            //console.log(product, 'ini product')
             res.status(201).json(product)
         } catch (error) {
             //console.log(error, "in ierror controller")
