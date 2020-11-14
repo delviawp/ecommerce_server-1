@@ -9,6 +9,6 @@ route.get('/products', productController.getAll)
 route.use(authentication)
 route.post('/products', productController.create)
 route.put('/products/:id', authorization, productController.update)
-route.delete('/products/:id', authorization, productController.delete)
+route.delete('/products/:id', productController.delete)
 
 module.exports = route

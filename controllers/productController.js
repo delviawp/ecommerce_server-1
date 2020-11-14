@@ -19,7 +19,7 @@ class ProductController {
             //console.log(product, 'ini product')
             res.status(201).json(product)
         } catch (error) {
-            //console.log(error, "in ierror controller")
+            console.log(error, "in ierror controller")
             next(error)
         }
     }

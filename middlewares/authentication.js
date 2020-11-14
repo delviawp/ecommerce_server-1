@@ -9,6 +9,7 @@ async function authentication(req, res, next) {
             res.status(401).json({
                 error: 'Authentication error'
             })
+            console.log(error,'<<<< error dari sini')
             // throw {msg: 'Authentication error', status: 401}
         } else {
             const decoded = verifyToken(token);
