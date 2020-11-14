@@ -4,6 +4,7 @@ const productController = require('../controllers/productController')
 const authentication = require('../middlewares/authentication')
 const authorization = require('../middlewares/authorization')
 
+route.get('/', (req,res) => {res.send('Ecommerce CMS')})
 route.post('/login', userController.login)
 route.get('/products', productController.getAll)
 route.use(authentication)
