@@ -25,6 +25,7 @@ class ProductController {
     }
 
     static async update(req, res, next) {
+        console.log(req.body, 'ini req controller')
         try {
             let { name , image_url, price, stock } = req.body
             let id = req.params.id
