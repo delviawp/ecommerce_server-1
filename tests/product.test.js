@@ -2,6 +2,7 @@ const app = require('../app')
 const request = require('supertest')
 const { User, Product } = require('../models')
 const { signToken } = require('../helpers/jwt')
+const product = require('../models/product')
 
 let accessToken = ''
 let userToken = ''
@@ -48,6 +49,27 @@ let dataProduct = {
 
 //console.log(dataProduct)
 
+describe('test get all product success', () => {
+    test('Object with return keys: name, image_url, price stock and status 200', (done) => {
+        request(app)
+        .get('/products')
+        .set('token', accessToken)
+        .end(function (err, res) {
+            if(err) throw err
+            else {
+                expect(res.status).toBe(200)
+                expect(res).toHaveProperty("body", expect.any(Object))
+                done()
+            }
+        })
+    })
+})
+
+
+
+
+//Test create product success
+
 describe('test create product success', () => {
     test('Object in return with keys: name, image_url, price',(done) => {
         request(app)
@@ -69,6 +91,11 @@ describe('test create product success', () => {
             })
     } )
 })
+
+//End test create product success
+
+
+//Test create product fail
 
 describe('test create product fail', () => {
     test('if theres no token',(done) => {
@@ -184,6 +211,11 @@ describe('test create product fail', () => {
     })  
 })
 
+//End test create product fail
+
+
+//Test update product success
+
 describe('test update product success', () => {
     test('Will return status-code 200 and object edit message',(done) => {
         request(app)
@@ -206,6 +238,12 @@ describe('test update product success', () => {
             })
     })
 })
+
+//End test update product success
+
+
+
+//Test update product fail
 
 describe('test update product fail', () => {
     test('Will return message',(done) => {
@@ -310,6 +348,32 @@ describe('test update product fail', () => {
     })
 })
 
+//End test update product fail
+
+
+//Test delete product success
+
+describe('test delete product succeed', () => {
+    test('Will return status-code 400 and message',(done) => {
+        request(app)
+            .delete(`/products/${productId}`)
+            .set('token', accessToken)
+            .end(function(err, res) {
+                if(err) throw err;
+                else {
+                    expect(res.status).toBe(200)
+                    expect(res.body).toHaveProperty('message', 'product has been deleted');
+                    done()
+                }
+            })
+    })
+})
+
+//End test delete product success
+
+
+//Test delete product fail
+
 describe('test delete product fail', () => {
     test('If didnt have access token',(done) => {
         request(app)
@@ -338,19 +402,8 @@ describe('test delete product fail', () => {
     })
 })
 
-describe('test delete product succeed', () => {
-    test('Will return status-code 400 and message',(done) => {
-        request(app)
-            .delete(`/products/${productId}`)
-            .set('token', accessToken)
-            .end(function(err, res) {
-                if(err) throw err;
-                else {
-                    expect(res.status).toBe(200)
-                    expect(res.body).toHaveProperty('message', 'product has been deleted');
-                    done()
-                }
-            })
-    })
-})
+//End test delete product fail
+
+
+
 
