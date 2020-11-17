@@ -23,20 +23,20 @@ beforeAll(async done => {
     }
 })
 
-// afterAll(function(done) {
-//     if(process.env.NODE_ENV == 'test') {
-//         Product.destroy({ truncate: true })
-//         .then(_=> {
-//             return User.destroy({ truncate: true })
-//         })
-//         .then(_=> {
-//             done()
-//         })
-//         .catch(err => {
-//            done(err) 
-//         })
-//     }
-// })
+afterAll(function(done) {
+    if(process.env.NODE_ENV == 'test') {
+        Product.destroy({ truncate: true })
+        .then(_=> {
+            return User.destroy({ truncate: true })
+        })
+        .then(_=> {
+            done()
+        })
+        .catch(err => {
+           done(err) 
+        })
+    }
+})
 
 
 let dataProduct = {
@@ -311,24 +311,34 @@ describe('test update product fail', () => {
 })
 
 describe('test delete product fail', () => {
-    test('If product id didnt found',(done) => {
+    test('If didnt have access token',(done) => {
         request(app)
-            .delete(`/products/1`)
-            .set('token', accessToken)
+            .delete(`/products/${productId}`)
             .end(function(err, res) {
-                const errors = ["product not found"]
                 if(err) throw err;
                 else {
-                    expect(res.status).toBe(404)
-                    expect(res.body).toHaveProperty('errors', expect.any(Array));
-                    expect(res.body.errors).toEqual(errors)
+                    expect(res.status).toBe(401)
+                    expect(res.body).toHaveProperty('error', 'Authentication error')
+                    done()
+                }
+            })
+    })
+    test("If it's not admin's access token",(done) => {
+        request(app)
+            .delete(`/products/${productId}`)
+            .set('token', userToken)
+            .end(function(err, res) {
+                if(err) throw err;
+                else {
+                    expect(res.status).toBe(401)
+                    expect(res.body).toHaveProperty('error', 'Authentication error')
                     done()
                 }
             })
     })
 })
 
-describe('test delete product failed', () => {
+describe('test delete product succeed', () => {
     test('Will return status-code 400 and message',(done) => {
         request(app)
             .delete(`/products/${productId}`)

@@ -19,7 +19,7 @@ class ProductController {
             //console.log(product, 'ini product')
             res.status(201).json(product)
         } catch (error) {
-            console.log(error, "in ierror controller")
+            //console.log(error, "in ierror controller")
             next(error)
         }
     }
@@ -45,7 +45,7 @@ class ProductController {
                 }
             }
         } catch (error) {
-            console.log(error, 'waktu edit')
+            //console.log(error, 'waktu edit')
             next(error)
         }
     }

@@ -42,6 +42,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
+        isInteger(value) {
+          if (typeof value !== 'number') {
+            throw new Error ('Input the right format') 
+          }
+        },
         min: {
           args: [[0]],
           msg: "Product's price can't be less than 0"

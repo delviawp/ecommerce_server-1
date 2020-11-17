@@ -12,9 +12,9 @@ module.exports = function (err, req, res, next) {
         default:
             errors.push(err.msg || 'internal server error')
             statusCode = err.status || 500
-            console.log(err.msg)
+            //console.log(err.msg)
             break;
     }
-    console.log(errors, 'ini eror handler')
+    //console.log(errors, 'ini eror handler')
     res.status(statusCode).json({ errors })
 }
