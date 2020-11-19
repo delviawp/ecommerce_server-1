@@ -14,10 +14,11 @@ class ProductController {
         //console.log(req.body, '<< ni req body create')
         try {
             const { name, image_url, price, stock } = req.body
-            //console.log(req.body)
+            const { UserId } = req.loggedInUser.id
+            console.log(UserId)
             const product = await Product.create({ name, image_url, price, stock})
             //console.log(product, 'ini product')
-            res.status(201).json(product)
+            res.status(201).json({product})
         } catch (error) {
             //console.log(error, "in ierror controller")
             next(error)
@@ -25,7 +26,7 @@ class ProductController {
     }
 
     static async update(req, res, next) {
-        console.log(req.body, 'ini req controller')
+        //console.log(req.body, 'ini req controller')
         try {
             let { name , image_url, price, stock } = req.body
             let id = req.params.id

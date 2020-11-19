@@ -7,7 +7,7 @@ module.exports = function (err, req, res, next) {
                 errors.push(el.message)
             })
             statusCode = 400
-            //console.log(errors, 'ini error handler')
+            console.log(err, 'ini error handler')
             break;
         default:
             errors.push(err.msg || 'internal server error')
