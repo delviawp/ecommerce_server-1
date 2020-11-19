@@ -14,9 +14,8 @@ class ProductController {
         //console.log(req.body, '<< ni req body create')
         try {
             const { name, image_url, price, stock } = req.body
-            const { UserId } = req.loggedInUser.id
-            console.log(UserId)
-            const product = await Product.create({ name, image_url, price, stock})
+    
+            const product = await Product.create({ name, image_url, price, stock, UserId: req.loggedInUser.id})
             //console.log(product, 'ini product')
             res.status(201).json({product})
         } catch (error) {
