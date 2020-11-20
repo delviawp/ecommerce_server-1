@@ -1,44 +1,38 @@
+const { where } = require('sequelize/types')
 const { Cart, User, Product } = require('../models')
 
 class CartController {
-    static addCart(req, res, next) {
-        const { ProductId } = req.loggedInUser.id
-        console.log(ProductId, '<<<< ada gak')
+    static async addCart(req, res, next) {
+        const { ProductId } = req.body
+        const UserId = req.loggedInUser
 
-        Cart.findOne({
-            where: {
-                ProductId, UserId: req.loggedInUser.id
-            }, 
-            include: { model: Product}
-        })
-        .then(cart => {
-            if(cart) {
-                if(cart.Product.stock <= cart.quantity) {
-                    throw {msg: "It's over the stock"}
-                } else {
-                    cart.quantity += 1
-                    return cart.save()
+        try {
+            const payload = {
+                ProductId, UserId, quantity: 1, status: false
+            }
+            const cart = await Cart.findOne({
+                where: {
+                    ProductId, UserId, status: false
                 }
+            })
+            if(!cart) {
+                const newCart = await Cart.create(payload)
+                res.status(201).json(newCart)
             } else {
-                return Cart.create({
-                    ProductId: ProductId,
-                    UserId: req.loggedInUser.id
+                const updateCart = await Cart.update({
+                    quantity: cart.quantity + 1
+                },
+                {
+                    where: {
+                        ProductId, UserId, status: false
+                    }, 
+                    returning: true
                 })
             }
-        })
-        .then(cart => {
-            res.status(201).json({
-                id: cart.id,
-                ProductId: cart.ProductId,
-                UserId: cart.UserId,
-                quantity: cart.quantity,
-                status: cart.status
-            })
-        })
-        .catch(err => {
-            console.log(err)
-            res.status(500).json(err)
-        })
+        } catch (error) {
+            console.log(error)
+            next(error)
+        }
     }
 
     static async updateCart(req,res) {
@@ -66,6 +60,28 @@ class CartController {
             res.status(200).json({message: 'Cart has been deleted'})
         } catch (error) {
             res.status(500).json(error)
+        }
+    }
+
+    static async getCart (req, res, next) {
+        const UserId = req.loggedInUser
+
+        try {
+            const carts = await Cart.findAll({ where: { UserId }, include: ['Product'], order: [['createdAt','ASC']] })
+            res.status(200).json(carts)
+        } catch(err) {
+            next(err)
+        }
+    }
+
+    static async deleteCart (req, res, next) {
+        const { id } = req.params
+
+        try {
+            const deletedCart = await Cart.destroy({ where: { id } })
+            res.status(200).json(deletedCart)
+        } catch(err) {
+            next(err)
         }
     }
 }
