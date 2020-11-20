@@ -2,7 +2,7 @@ const { Cart, User, Product } = require('../models')
 
 class CartController {
     static addCart(req, res, next) {
-        const { ProductId } = +req.params
+        const { ProductId } = req.loggedInUser.id
         console.log(ProductId, '<<<< ada gak')
 
         Cart.findOne({
